@@ -1,4 +1,4 @@
-const listNav = ['home', 'work list', 'about']
+const listNav = []
 function html([first,...strings], ...values) {
     return values.reduce(
         (acc,cur) => acc.concat(cur,strings.shift()),
@@ -10,6 +10,7 @@ function html([first,...strings], ...values) {
 function createStore(reducer) {
     let state = reducer()
     const rootElement = new Map()
+    
 
     function render() {
         for (const [root, component] of rootElement) {
@@ -38,10 +39,14 @@ function reducer(state,action,args) {
     
     switch (action) {
         case 'create':
-            return listNav.push(...args)
+            const a = document.querySelector('input[type="text"]')
+            listNav.unshift(a.value) 
+            console.log(listNav, 'add' ,args)
+            
+            break
         case 'delete':
-            console.log(listNav);
-            return listNav.pop()
+            listNav.splice(listNav.findIndex( a => a==args),1)
+            break
         default:
             return state
             
@@ -52,12 +57,16 @@ function reducer(state,action,args) {
 
 function navElement(){
     return html`
-    <button onClick="dispatch('create', 'contact')">ADD</button>
-    <button onClick="dispatch('delete')">REMOVE</button>
+    <input type="text">
+    <button onClick="dispatch('create')">ADD</button>
+    <p>List to do</p>
     <ul>
-        ${listNav.map(navNode => `<li>${navNode}</li>`)}
+        ${listNav.map(navNode =>
+            `<li>
+            <span>${navNode}</span>
+            <button onClick= "dispatch('delete','${navNode}')">x</button>
+            `)}
     </ul>
-    <p>HELLO</p>
     `
 }
 const { attach, connect, dispatch } = createStore(reducer)
