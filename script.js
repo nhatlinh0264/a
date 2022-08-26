@@ -50,7 +50,6 @@ const listNav = {
     switch (action) {
       case 'create':
         const a = $('input[type="text"]')
-        console.log(a.value, state);
         if (a.value != '') {
           listNav.arr.push({name:a.value,update: false})
         }
@@ -63,10 +62,6 @@ const listNav = {
         if (confirm('are you sure') == true)
           listNav.arr.splice(args, 1)
   
-        break
-      case 'enter':
-        if (event.key === 'Enter')
-          dispatch('create')
         break
       case 'toggle':
         listNav.tog = !listNav.tog
@@ -90,7 +85,7 @@ const listNav = {
   
   
   function inputBar() {
-    return `<input type="text" onkeypress="dispatch('enter')">
+    return `<input type="text" >
            <button onClick="dispatch('create')">ADD</button>
            <button onClick="dispatch('toggle')">Edit</button>
       <p>List to do</p> `
